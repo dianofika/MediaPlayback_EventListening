@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -154,7 +155,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
             mPlayerView.setPlayer(mExoPlayer);
 
-            // TODO (2): Set the ExoPlayer.EventListener to this activity
+            mExoPlayer.addListener(this);
 
             // Prepare the MediaSource.
             String userAgent = Util.getUserAgent(this, "ClassicalMusicQuiz");
@@ -282,7 +283,11 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
+        if ((playbackState == ExoPlayer.STATE_READY) && playWhenReady) {
+            Log.d(TAG, "onPlayerStateChanged: PLAYING");
+        } else if ((playbackState == ExoPlayer.STATE_READY)) {
+            Log.d(TAG, "onPlayerStateChanged: PAUSED");
+        }
     }
 
     @Override
@@ -294,6 +299,4 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     public void onPositionDiscontinuity() {
 
     }
-
-    // TODO (3): Add conditional logging statements to the onPlayerStateChanged() method that log when ExoPlayer is playing or paused.
 }
